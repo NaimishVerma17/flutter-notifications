@@ -42,13 +42,33 @@ class MyHomePageState extends State {
           child: Text("Notification"),
         ),
       ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: _repeatNotification,
-          child: Text("Trigger notification"),
-          textColor: Color(0xFFffffff),
-          color: Theme.of(context).primaryColor,
-        ),
+      body: Column(
+        children: <Widget>[
+          Center(
+            child: RaisedButton(
+              onPressed: _showNotification,
+              child: Text("Trigger one-time notification"),
+              textColor: Color(0xFFffffff),
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+          Center(
+            child: RaisedButton(
+              onPressed: _repeatNotification,
+              child: Text("Trigger repeated notification"),
+              textColor: Color(0xFFffffff),
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+          Center(
+            child: RaisedButton(
+              onPressed: _scheduleNotification,
+              child: Text("Trigger scheduled notification"),
+              textColor: Color(0xFFffffff),
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -67,30 +87,33 @@ class MyHomePageState extends State {
 
   Future _repeatNotification() async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        'id1',
-        'Local',
-        'repeating notification');
+        'id1', 'Local', 'repeating notification');
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.periodicallyShow(0, 'Title',
-        'Hello, this is a test notification!', RepeatInterval.EveryMinute, platformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.periodicallyShow(
+        0,
+        'Title',
+        'Hello, this is a test notification!',
+        RepeatInterval.EveryMinute,
+        platformChannelSpecifics);
   }
+
   Future _scheduleNotification() async {
     print("Called");
     var scheduledNotificationDateTime =
-    new DateTime.now().add(new Duration(seconds: 5));
+        new DateTime.now().add(new Duration(seconds: 5));
 
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        'your other channel id',
-        'your other channel name',
-        'your other channel description',
+        'id',
+        'Channel name',
+        'Hello, this is a test notification!',
         icon: 'app_icon',
         largeIcon: 'app_icon',
         largeIconBitmapSource: BitmapSource.Drawable,
         color: const Color.fromARGB(255, 255, 0, 0));
     var iOSPlatformChannelSpecifics =
-    new IOSNotificationDetails(sound: "slow_spring_board.aiff");
+        new IOSNotificationDetails(sound: "slow_spring_board.aiff");
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.schedule(
